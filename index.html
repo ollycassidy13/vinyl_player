@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Vinyl Player</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Scene setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+
+        const pointLight = new THREE.PointLight(0xffffff, 0.5);
+        pointLight.position.set(5, 5, 5);
+        scene.add(pointLight);
+
+        // Camera position
+        camera.position.set(0, 1, 5);
+
+        // Vinyl Player Base
+        const baseGeometry = new THREE.BoxGeometry(3, 0.1, 3);
+        const baseMaterial = new THREE.MeshStandardMaterial({ color: 0x808080 });
+        const base = new THREE.Mesh(baseGeometry, baseMaterial);
+        base.position.y = 0;
+        scene.add(base);
+
+        // Platter
+        const platterGeometry = new THREE.CylinderGeometry(1.2, 1.2, 0.1, 32);
+        const platterMaterial = new THREE.MeshStandardMaterial({ color: 0x000000 });
+        const platter = new THREE.Mesh(platterGeometry, platterMaterial);
+        platter.position.y = 0.1;
+        scene.add(platter);
+
+        // Vinyl Record
+        const recordGeometry = new THREE.CylinderGeometry(1, 1, 0.01, 32);
+        const recordMaterial = new THREE.MeshStandardMaterial({ color: 0x333333 });
+        const record = new THREE.Mesh(recordGeometry, recordMaterial);
+        record.position.y = 0.105;
+        scene.add(record);
+
+        // Tonearm Base
+        const tonearmBaseGeometry = new THREE.BoxGeometry(0.05, 0.1, 0.05);
+        const tonearmBaseMaterial = new THREE.MeshStandardMaterial({ color: 0x222222 });
+        const tonearmBase = new THREE.Mesh(tonearmBaseGeometry, tonearmBaseMaterial);
+        tonearmBase.position.set(1.4, 0.15, 0);
+        scene.add(tonearmBase);
+
+        // Tonearm
+        const tonearmGeometry = new THREE.BoxGeometry(0.8, 0.02, 0.02);
+        const tonearmMaterial = new THREE.MeshStandardMaterial({ color: 0x222222 });
+        const tonearm = new THREE.Mesh(tonearmGeometry, tonearmMaterial);
+        tonearm.position.set(1.8, 0.2, 0);
+        tonearm.rotation.z = -Math.PI / 4; // Rotate tonearm towards the record
+        scene.add(tonearm);
+
+        // Animation function
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Rotate the vinyl record and platter
+            record.rotation.y += 0.01;
+            platter.rotation.y += 0.01;
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
